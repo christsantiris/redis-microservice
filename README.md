@@ -10,3 +10,7 @@
 ### add breakpoints in vs code and start debugging
 
 ## To run as docker container: 
+
+## Use with below in .env file to point to mongo atlas:
+### ENV_NAME=development
+### MONGO_HOST=mycluster.z5zol.mongodb.net
