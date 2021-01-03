@@ -24,13 +24,13 @@ export default ({ app }: RoutesInput) => {
 
   router.put('/:id', async (req: express.Request, res: express.Response) => {
     res.json({
-      message: `Hello put with ID: ${req.params.id}`
+      message: `Hello Put with ID: ${req.params.id}`
     });
   });
 
-  router.delete('/', async (req: express.Request, res: express.Response) => {
+  router.delete('/:id', async (req: express.Request, res: express.Response) => {
     res.json({
-      message: 'Hello Delete'
+      message: `Hello Delete with ID: ${req.params.id}`
     });
   });
 
