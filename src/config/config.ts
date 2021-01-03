@@ -1,5 +1,5 @@
 const serviceConfigs = {
-  port: process.env.PORT || 3000,
+  port: process.env.PORT,
   env: process.env.NODE_ENV || 'development',
 }
 
