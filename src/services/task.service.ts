@@ -16,6 +16,7 @@ export class TaskService {
       console.log(`No data found in Redis for key ${redisKey}`);
 
       const tasks = await Task.find();
+
       if (tasks && tasks.length) {
         redis.set(redisKey, JSON.stringify(tasks));
         return { success: true, data: tasks };
@@ -36,6 +37,7 @@ export class TaskService {
       console.log(`No data found in Redis for key: ${redisKey}`);
 
       const task = await Task.findById({ _id: ID })
+
       if (!task || task === null) {
         return { success: false, message: `There was an error getting Task with ID of ${ID}` }
       } else {
@@ -64,8 +66,11 @@ export class TaskService {
   }
 
   public async deleteTask(ID: any): Promise<any> {
+    const redisKey = `task:${ID}`;
     const deletedTask = await Task.deleteOne({ _id: ID })
     if (deletedTask.deletedCount > 0) {
+      redis.del(redisKey);
+      console.log(`Data removed from redis for key`)
       return { success: true, data: `Task with ID of ${ID} successfully deleted` };
     } else {
       return { success: false, message: `There was an error deleting the Task with ID of ${ID}` }

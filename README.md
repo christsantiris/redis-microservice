@@ -14,3 +14,19 @@
 ## Use with below in .env file to point to mongo atlas:
 ### ENV_NAME=development
 ### MONGO_HOST=mycluster.z5zol.mongodb.net
+
+## To install and run redis: 
+### `brew install redis`
+### `brew services start redis`
+
+## To confirm redis is running:
+### `redis-cli ping` 
+
+## To validate keys are present in redis: 
+### `redis-cli get <key>`
+
+## To remove key from redis: 
+### `redis-cli del <key>`
+
+## To empty entire redis cache: 
+### `redis-cli flushall`
