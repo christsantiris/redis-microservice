@@ -14,9 +14,10 @@ export class TaskService {
       return { success: true, data: JSON.parse(redisResponse) };
     } else {
       console.log(`No data found in Redis for key ${redisKey}`);
+
       const tasks = await Task.find();
       if (tasks && tasks.length) {
-        redis.set("tasks", JSON.stringify(tasks));
+        redis.set(redisKey, JSON.stringify(tasks));
         return { success: true, data: tasks };
       } else {
         return { success: false, message: 'There was an error getting the task list' };
@@ -25,11 +26,22 @@ export class TaskService {
   }
 
   public async getTask(ID: any): Promise<any> {
-    const task = await Task.findById({ _id: ID })
-    if (!task || task === null) {
-      return { success: false, message: `There was an error getting Task with ID of ${ID}` }
+    const redisKey = `task:${ID}`;
+    const redisResponse = await redis.get(redisKey);
+
+    if (redisResponse) {
+      console.log(`Data found in Redis for key: ${redisKey}`);
+      return { success: true, data: JSON.parse(redisResponse) };
     } else {
-      return { success: true, data: task };
+      console.log(`No data found in Redis for key: ${redisKey}`);
+
+      const task = await Task.findById({ _id: ID })
+      if (!task || task === null) {
+        return { success: false, message: `There was an error getting Task with ID of ${ID}` }
+      } else {
+        redis.set(redisKey, JSON.stringify(task));
+        return { success: true, data: task };
+      }
     }
   }
 
