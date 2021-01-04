@@ -1,6 +1,6 @@
 ## To run project:
 ### `npm i`
-### npm start 
+### `npm start`
 
 ## To run the project in debug mode:
 ### `npm i`
