@@ -1,13 +1,26 @@
+const Redis = require("ioredis");
+const redis = new Redis();
+
 import { task as Task } from '../common/schemas/task.schema'
 
 export class TaskService {
 
   public async getAllTasks(): Promise<any> {
-    const tasks = await Task.find();
-    if (tasks && tasks.length) {
-      return { success: true, data: tasks };
+    const redisKey = 'tasks'
+    const redisResponse = await redis.get(redisKey);
+
+    if (redisResponse) {
+      console.log(`Data found in Redis for key ${redisKey}`);
+      return { success: true, data: JSON.parse(redisResponse) };
     } else {
-      return { success: false, message: 'There was an error getting the task list' };
+      console.log(`No data found in Redis for key ${redisKey}`);
+      const tasks = await Task.find();
+      if (tasks && tasks.length) {
+        redis.set("tasks", JSON.stringify(tasks));
+        return { success: true, data: tasks };
+      } else {
+        return { success: false, message: 'There was an error getting the task list' };
+      }
     }
   }
 
@@ -26,11 +39,11 @@ export class TaskService {
       return { success: true, data: task };
     } else {
       return { success: false, message: 'Unable to create task' }
-    }    
+    }
   }
 
-  public async updateTask({ID, document}: {ID: any, document: any}): Promise<any> {
-    const task = await Task.updateOne({_id: ID}, document);
+  public async updateTask({ ID, document }: { ID: any, document: any }): Promise<any> {
+    const task = await Task.updateOne({ _id: ID }, document);
     if (task.nModified > 0) {
       return { success: true, data: `Task with ID of ${ID} successfully updated` };
     } else {
