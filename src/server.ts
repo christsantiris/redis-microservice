@@ -13,7 +13,7 @@ routes({ app });
 
 const dbService = new DbService();
 
-app.listen(port, (): void => {
+app.listen(port, async(): Promise<void> => {
   console.log(`server is listening on ${port}`)
-  dbService.createMongoConnection();
+  await dbService.createMongoConnection();
 })
