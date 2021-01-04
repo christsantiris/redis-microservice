@@ -3,4 +3,10 @@ const serviceConfigs = {
   env: process.env.ENV_NAME || 'local'
 }
 
-export { serviceConfigs };
+const redisConfigs = {
+  port: process.env.REDIS_PORT || 6379,
+  host: process.env.REDIS_HOST || '0.0.0.0',
+  expiry: process.env.REDIS_EXPIRY || 60
+};
+
+export { serviceConfigs, redisConfigs };

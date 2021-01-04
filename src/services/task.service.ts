@@ -1,5 +1,7 @@
-const Redis = require("ioredis");
-const redis = new Redis();
+import Redis from 'ioredis';
+import { redisConfigs } from '../config/config';
+
+const redis = new Redis(redisConfigs.port, redisConfigs.host);
 
 import { task as Task } from '../common/schemas/task.schema'
 
@@ -70,6 +72,7 @@ export class TaskService {
     const deletedTask = await Task.deleteOne({ _id: ID })
     if (deletedTask.deletedCount > 0) {
       redis.del(redisKey);
+      redis.del('tasks');
       console.log(`Data removed from redis for key`)
       return { success: true, data: `Task with ID of ${ID} successfully deleted` };
     } else {

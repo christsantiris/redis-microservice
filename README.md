@@ -11,9 +11,9 @@
 
 ## To run as docker container: 
 
-## Use with below in .env file to point to mongo atlas:
-### ENV_NAME=development
-### MONGO_HOST=mycluster.z5zol.mongodb.net
+##   For use with below in .env file to point to mongo atlas:
+### `ENV_NAME=development`
+### `MONGO_HOST=<your host>`
 
 ## To install and run redis: 
 ### `brew install redis`
