@@ -10,7 +10,7 @@ export default ({ app }: RoutesInput) => {
   router.post('/user/signup', async (req: Req, res: express.Response) => {
     try {
       const result = await authService.signUp(
-        { email: req.body.email, password: req.body.password },
+        { displayName: req.body.name, email: req.body.email, password: req.body.password },
         res
       );
     } catch (err) {

@@ -1,6 +1,7 @@
 const serviceConfigs = {
   port: process.env.PORT || 3000,
-  env: process.env.ENV_NAME || 'local'
+  env: process.env.ENV_NAME || 'local',
+  secret: process.env.JWT_KEY || 'secret'
 }
 
 const redisConfigs = {

@@ -6,14 +6,14 @@ import { user as User } from '../common/schemas/user.schema';
 
 export class AuthService {
   public async signUp(
-    { email, password }: { email: string; password: any },
+    { displayName, email, password }: { displayName: string, email: string; password: any },
     res: Response
   ) {
     const user = await User.find({ email: email });
 
     if (user && user.length >= 1) {
       return res.status(409).json({
-        message: 'Email exists',
+        message: 'An account already exists for that email address',
       });
     } else {
       bcrypt.hash(password, 10, async (err, hash) => {
@@ -24,16 +24,19 @@ export class AuthService {
         } else {
           const user = new User({
             _id: new mongoose.Types.ObjectId(),
-            email: email,
+            displayName,
+            email,
             password: hash,
           });
           const result = await user.save();
           if (result) {
             res.status(201).json({
+              success: true,
               message: `New user created for email ${email}`,
             });
           } else {
             res.status(500).json({
+              success: false,
               message: `Error creating user for email ${email}`,
             });
           }
@@ -71,19 +74,21 @@ export class AuthService {
           }
         );
         return res.status(200).json({
+          success: true,
           message: `Successfully logged in with user: ${email}`,
           token: token,
+          displayName: user.email
         });
       }
       res.status(401).json({
-        message: 'Auth failed',
+        success: false,
+        message: 'Unauthorized',
       });
     });
   }
 
   public async deleteUser({ userId }, res) {
     const deletedUser = await User.deleteOne({ _id: userId });
-    console.log(deletedUser);
     if (deletedUser && deletedUser.deletedCount > 0) {
       res.status(200).json({
         success: true,
