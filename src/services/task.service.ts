@@ -91,12 +91,10 @@ export class TaskService {
   }
 
   public async deleteTask(ID: any): Promise<any> {
-    const redisKey = `task:${ID}`;
     const deletedTask = await Task.deleteOne({ _id: ID })
     if (deletedTask.deletedCount > 0) {
-      (<any>this.redis.client).del(redisKey);
-      (<any>this.redis.client).del('tasks');
-      console.log(`Data removed from redis for keys ${redisKey} and tasks`)
+      (<any>this.redis.client).flushall()
+      console.log(`Data removed from redis cache`)
       return { success: true, data: `Task with ID of ${ID} successfully deleted` };
     } else {
       return { success: false, message: `There was an error deleting the Task with ID of ${ID}` }
