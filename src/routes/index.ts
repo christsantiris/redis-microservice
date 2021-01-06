@@ -2,12 +2,13 @@ import * as express from 'express';
 import { RoutesInput } from '../types/route';
 import { Req } from '../common/interfaces/interfaces';
 import { TaskService } from '../services/task.service';
+import checkAuth from '../middleware/check-auth';
 
 export default ({ app }: RoutesInput) => {
   const router = express.Router()
   const taskService = new TaskService();
 
-  router.get('/', async (req: Req, res: express.Response) => {
+  router.get('/', checkAuth, async (req: Req, res: express.Response) => {
     try {
       const tasks = await taskService.getAllTasks();
 
@@ -21,7 +22,7 @@ export default ({ app }: RoutesInput) => {
     }
   });
 
-  router.get('/:id', async (req: Req, res: express.Response) => {
+  router.get('/:id', checkAuth, async (req: Req, res: express.Response) => {
     try {
       const task = await taskService.getTask(req.params.id);
 
@@ -35,7 +36,7 @@ export default ({ app }: RoutesInput) => {
     }
   });
 
-  router.post('/', async (req: Req, res: express.Response) => {
+  router.post('/', checkAuth, async (req: Req, res: express.Response) => {
     try {
       const task = await taskService.createTask(req.body);
       if (task.success === true) {
@@ -48,7 +49,7 @@ export default ({ app }: RoutesInput) => {
     }
   });
 
-  router.put('/:id', async (req: Req, res: express.Response) => {
+  router.put('/:id', checkAuth, async (req: Req, res: express.Response) => {
     try {
       const task = await taskService.updateTask({ID: req.params.id, document: req.body});
 
@@ -62,7 +63,7 @@ export default ({ app }: RoutesInput) => {
     }
   });
 
-  router.delete('/:id', async (req: Req, res: express.Response) => {
+  router.delete('/:id', checkAuth, async (req: Req, res: express.Response) => {
     try {   
         const task = await taskService.deleteTask(req.params.id);
         if (task.success === true) {

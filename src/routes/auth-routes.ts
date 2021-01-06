@@ -1,7 +1,8 @@
-import * as express from 'express';
+import e, * as express from 'express';
 import { RoutesInput } from '../types/route';
 import { Req } from '../common/interfaces/interfaces';
 import { AuthService } from '../services/auth.service';
+import checkAuth from '../middleware/check-auth';
 
 export default ({ app }: RoutesInput) => {
   const router = express.Router();
@@ -33,7 +34,7 @@ export default ({ app }: RoutesInput) => {
     }
   });
 
-  router.delete('/user/delete/:userId', async (req, res, next) => {
+  router.delete('/user/delete/:userId', checkAuth, async (req: Req, res: express.Response) => {
     try {
       const result = await authService.deleteUser(
         { userId: req.params.userId },
