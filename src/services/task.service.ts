@@ -51,6 +51,7 @@ export class TaskService {
   public async createTask(document: any): Promise<any> {
     const task = await Task.create(document)
     if (task) {
+      (<any>this.redis.client).del('tasks');
       return { success: true, data: task };
     } else {
       return { success: false, message: 'Unable to create task' }
@@ -60,6 +61,7 @@ export class TaskService {
   public async updateTask({ ID, document }: { ID: any, document: any }): Promise<any> {
     const task = await Task.updateOne({ _id: ID }, document);
     if (task.nModified > 0) {
+      (<any>this.redis.client).del('tasks');
       return { success: true, data: `Task with ID of ${ID} successfully updated` };
     } else {
       return { success: false, message: `There was an error updating Task with ID of ${ID}` }
