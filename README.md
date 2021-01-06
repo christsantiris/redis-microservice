@@ -14,6 +14,7 @@
 ##   For use with below in .env file to point to mongo atlas:
 ### `ENV_NAME=development`
 ### `MONGO_HOST=<your host>`
+### `JWT_KEY=secret`
 
 ## To install and run redis: 
 ### `brew install redis`
@@ -30,3 +31,6 @@
 
 ## To empty entire redis cache: 
 ### `redis-cli flushall`
+
+## Notes: 
+### A microservice does not necessarily need authentication, but I added it to demonstrate how it could work

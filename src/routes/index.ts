@@ -1,5 +1,5 @@
-import { RoutesInput } from '../types/route';
 import * as express from 'express';
+import { RoutesInput } from '../types/route';
 import { Req } from '../common/interfaces/interfaces';
 import { TaskService } from '../services/task.service';
 
@@ -9,7 +9,7 @@ export default ({ app }: RoutesInput) => {
 
   router.get('/', async (req: Req, res: express.Response) => {
     try {
-      const tasks =await taskService.getAllTasks();
+      const tasks = await taskService.getAllTasks();
 
       if (tasks.success === true) {
         return res.json(tasks);       
