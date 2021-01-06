@@ -19,7 +19,7 @@ export class TaskService {
       const tasks = await Task.find();
 
       if (tasks && tasks.length) {
-        this.redis.client.set(redisKey, JSON.stringify(tasks), 'EX', redisConfigs.expiry);
+        (<any>this.redis.client).set(redisKey, JSON.stringify(tasks), 'EX', redisConfigs.expiry);
         return { success: true, data: tasks };
       } else {
         return { success: false, message: 'There was an error getting the task list' };
