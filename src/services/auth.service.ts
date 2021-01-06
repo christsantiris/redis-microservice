@@ -13,7 +13,7 @@ export class AuthService {
 
     if (user && user.length >= 1) {
       return res.status(409).json({
-        message: 'Mail exists',
+        message: 'Email exists',
       });
     } else {
       bcrypt.hash(password, 10, async (err, hash) => {
@@ -30,11 +30,11 @@ export class AuthService {
           const result = await user.save();
           if (result) {
             res.status(201).json({
-              message: 'User created',
+              message: `New user created for email ${email}`,
             });
           } else {
             res.status(500).json({
-              message: 'Error creating user',
+              message: `Error creating user for email ${email}`,
             });
           }
         }
@@ -46,14 +46,14 @@ export class AuthService {
     { email, password }: { email: string; password: any },
     res: Response
   ) {
-    const user = await User.find({ email: email });
+    const user = await User.findOne({ email: email });
 
     if (user && user.length < 1) {
       return res.status(401).json({
         message: 'User verification failed',
       });
     }
-    bcrypt.compare(password, user[0].password, (err, result) => {
+    bcrypt.compare(password, user.password, (err, result) => {
       if (err) {
         return res.status(401).json({
           message: 'Login failed',
@@ -62,8 +62,8 @@ export class AuthService {
       if (result) {
         const token = jwt.sign(
           {
-            email: user[0].email,
-            userId: user[0]._id,
+            email: user.email,
+            userId: user._id,
           },
           process.env.JWT_KEY,
           {
@@ -71,7 +71,7 @@ export class AuthService {
           }
         );
         return res.status(200).json({
-          message: 'Auth successful',
+          message: `Successfully logged in with user: ${email}`,
           token: token,
         });
       }
@@ -83,6 +83,7 @@ export class AuthService {
 
   public async deleteUser({ userId }, res) {
     const deletedUser = await User.deleteOne({ _id: userId });
+    console.log(deletedUser);
     if (deletedUser && deletedUser.deletedCount > 0) {
       res.status(200).json({
         success: true,

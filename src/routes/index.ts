@@ -1,5 +1,5 @@
-import { RoutesInput } from '../types/route';
 import * as express from 'express';
+import { RoutesInput } from '../types/route';
 import { Req } from '../common/interfaces/interfaces';
 import { TaskService } from '../services/task.service';
 
