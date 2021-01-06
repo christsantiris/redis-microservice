@@ -48,7 +48,7 @@ export class TaskService {
     }
   }
 
-  public async createTask(document: any): Promise<any> {
+  public async createTask({ document }: { document:any }): Promise<any> {
     const task = await Task.create(document)
     if (task) {
       (<any>this.redis.client).del('tasks');

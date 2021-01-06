@@ -38,7 +38,7 @@ export default ({ app }: RoutesInput) => {
 
   router.post('/', checkAuth, async (req: Req, res: express.Response) => {
     try {
-      const task = await taskService.createTask(req.body);
+      const task = await taskService.createTask({ document:req.body} );
       if (task.success === true) {
         return res.json(task)
       } else {
