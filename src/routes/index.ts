@@ -22,6 +22,20 @@ export default ({ app }: RoutesInput) => {
     }
   });
 
+  router.get('/tasks/user/:userid', checkAuth, async (req: Req, res: express.Response) => {
+    try {
+      const tasks = await taskService.getTasksForUser({ userID: req.params.userid });
+
+      if (tasks.success === true) {
+        return res.json(tasks);       
+      } else {
+        res.status(500).json({ message: tasks.message })
+      }
+    } catch (err) {
+      res.status(err.status).send({ message: 'There was an error getting task list' });
+    }
+  });
+
   router.get('/:id', checkAuth, async (req: Req, res: express.Response) => {
     try {
       const task = await taskService.getTask(req.params.id);
@@ -38,7 +52,7 @@ export default ({ app }: RoutesInput) => {
 
   router.post('/', checkAuth, async (req: Req, res: express.Response) => {
     try {
-      const task = await taskService.createTask({ document:req.body} );
+      const task = await taskService.createTask({ userID: req.userData.userId, document:req.body} );
       if (task.success === true) {
         return res.json(task)
       } else {

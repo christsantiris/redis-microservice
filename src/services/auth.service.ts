@@ -77,7 +77,8 @@ export class AuthService {
           success: true,
           message: `Successfully logged in with user: ${email}`,
           token: token,
-          displayName: user.displayName
+          displayName: user.displayName,
+          userId: user._id
         });
       }
       res.status(401).json({

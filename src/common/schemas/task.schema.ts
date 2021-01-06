@@ -16,6 +16,9 @@ const TaskSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  userId: {
+    type: String
+  }
 })
 
 const task = mongoose.model('Task', TaskSchema)
