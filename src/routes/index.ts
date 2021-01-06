@@ -9,7 +9,7 @@ export default ({ app }: RoutesInput) => {
 
   router.get('/', async (req: Req, res: express.Response) => {
     try {
-      const tasks =await taskService.getAllTasks();
+      const tasks = await taskService.getAllTasks();
 
       if (tasks.success === true) {
         return res.json(tasks);       

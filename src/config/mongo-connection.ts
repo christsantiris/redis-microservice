@@ -17,7 +17,8 @@ const connection = {
     `mongodb://${credentials}${host}:${mongoport}/${database}?ssl=${ssl}`,
     options: {
         useNewUrlParser: true,
-        useUnifiedTopology: true
+        useUnifiedTopology: true,
+        useCreateIndex: true
     }
 };
 
