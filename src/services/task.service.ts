@@ -1,15 +1,14 @@
-import Redis from 'ioredis';
 import { redisConfigs } from '../config/config';
-
-const redis = new Redis(redisConfigs.port, redisConfigs.host);
-
 import { task as Task } from '../common/schemas/task.schema'
+import RedisWrapper from '../lib/redis';
 
 export class TaskService {
 
+  redis = new RedisWrapper()
+
   public async getAllTasks(): Promise<any> {
     const redisKey = 'tasks'
-    const redisResponse = await redis.get(redisKey);
+    const redisResponse = await (<any>this.redis.client).get(redisKey);
 
     if (redisResponse) {
       console.log(`Data found in Redis for key ${redisKey}`);
@@ -20,7 +19,7 @@ export class TaskService {
       const tasks = await Task.find();
 
       if (tasks && tasks.length) {
-        redis.set(redisKey, JSON.stringify(tasks));
+        this.redis.client.set(redisKey, JSON.stringify(tasks), 'EX', redisConfigs.expiry);
         return { success: true, data: tasks };
       } else {
         return { success: false, message: 'There was an error getting the task list' };
@@ -30,7 +29,7 @@ export class TaskService {
 
   public async getTask(ID: any): Promise<any> {
     const redisKey = `task:${ID}`;
-    const redisResponse = await redis.get(redisKey);
+    const redisResponse = await this.redis.client.get(redisKey);
 
     if (redisResponse) {
       console.log(`Data found in Redis for key: ${redisKey}`);
@@ -43,7 +42,7 @@ export class TaskService {
       if (!task || task === null) {
         return { success: false, message: `There was an error getting Task with ID of ${ID}` }
       } else {
-        redis.set(redisKey, JSON.stringify(task));
+        this.redis.client.set(redisKey, JSON.stringify(task), 'EX', redisConfigs.expiry);
         return { success: true, data: task };
       }
     }
@@ -71,9 +70,9 @@ export class TaskService {
     const redisKey = `task:${ID}`;
     const deletedTask = await Task.deleteOne({ _id: ID })
     if (deletedTask.deletedCount > 0) {
-      redis.del(redisKey);
-      redis.del('tasks');
-      console.log(`Data removed from redis for key`)
+      this.redis.client.del(redisKey);
+      this.redis.client.del('tasks');
+      console.log(`Data removed from redis for keys ${redisKey} and tasks`)
       return { success: true, data: `Task with ID of ${ID} successfully deleted` };
     } else {
       return { success: false, message: `There was an error deleting the Task with ID of ${ID}` }
