@@ -29,7 +29,7 @@ export class TaskService {
 
   public async getTask(ID: any): Promise<any> {
     const redisKey = `task:${ID}`;
-    const redisResponse = await this.redis.client.get(redisKey);
+    const redisResponse = await (<any>this.redis.client).get(redisKey);
 
     if (redisResponse) {
       console.log(`Data found in Redis for key: ${redisKey}`);
@@ -42,7 +42,7 @@ export class TaskService {
       if (!task || task === null) {
         return { success: false, message: `There was an error getting Task with ID of ${ID}` }
       } else {
-        this.redis.client.set(redisKey, JSON.stringify(task), 'EX', redisConfigs.expiry);
+        (<any>this.redis.client).set(redisKey, JSON.stringify(task), 'EX', redisConfigs.expiry);
         return { success: true, data: task };
       }
     }
@@ -70,8 +70,8 @@ export class TaskService {
     const redisKey = `task:${ID}`;
     const deletedTask = await Task.deleteOne({ _id: ID })
     if (deletedTask.deletedCount > 0) {
-      this.redis.client.del(redisKey);
-      this.redis.client.del('tasks');
+      (<any>this.redis.client).del(redisKey);
+      (<any>this.redis.client).del('tasks');
       console.log(`Data removed from redis for keys ${redisKey} and tasks`)
       return { success: true, data: `Task with ID of ${ID} successfully deleted` };
     } else {
