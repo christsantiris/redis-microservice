@@ -10,6 +10,7 @@
 ### add breakpoints in vs code and start debugging
 
 ## To run as docker container: 
+### `docker compose build` then `docker compose up`
 
 ##   For use with below in .env file to point to mongo atlas:
 ### `ENV_NAME=development`
