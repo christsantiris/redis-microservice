@@ -1,7 +1,7 @@
 import bodyParser from 'body-parser';
 import { Request, Response, NextFunction } from 'express'
 import app from './App'
-import routes from '../src/routes';
+import routes from './routes';
 import authRoutes from './routes/auth-routes';
 import { serviceConfigs } from './config/config';
 import DbService from './services/db.service';

@@ -7,7 +7,7 @@
     "test": "jest",
     "start": "nodemon --config nodemon.json src/server.ts",
     "start:debug": "nodemon --config nodemon.json --inspect-brk src/server.ts",
-    "build": "rimraf ./build && tsc"
+    "build": "npx tsc"
   },
   "repository": {
     "type": "git",
